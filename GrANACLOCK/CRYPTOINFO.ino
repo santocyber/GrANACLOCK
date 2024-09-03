@@ -10,18 +10,9 @@ void bolsa() {
    tft.setRotation(rotate);
    tft.setFreeFont(&FreeSansBold9pt7b);  // Fonte
 
-   tft.fillScreen(TFT_BLACK); // Limpar a tela
-   tft.setTextColor(TFT_YELLOW);
-   tft.setTextSize(1);
-   tft.setCursor(10, 0);
-   tft.println("PEGANDO COTACAO...");
-
-
   // Exibir todos os valores de uma vez na tela
-   tft.fillScreen(TFT_BLACK); // Limpar a tela
    tft.setTextColor(TFT_GREEN);
-   tft.setTextSize(3);
-   tft.setCursor(20, 0);
+   tft.setTextSize(1);
 
    
     String json = getCurrencyPrices();
@@ -37,7 +28,9 @@ void bolsa() {
         Serial.println(error.c_str());
         return;
     }
-
+   tft.fillScreen(TFT_BLACK); // Limpar a tela
+   tft.setCursor(0, 60);
+   
     // Iterar sobre os valores e imprimir de forma formatada
     Serial.println("Formatted Currency Prices:");
     for (JsonPair kv : doc.as<JsonObject>()) {
@@ -47,7 +40,6 @@ void bolsa() {
     }
    Serial.println(getCurrencyPrices());
 
-   delay(10000);
 
  if (tft.getTouchRawZ() > 500) {
       Serial.println("Tela tocada. Saindo do loop.stopFetching");

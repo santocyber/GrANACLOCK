@@ -46,7 +46,7 @@ void drawClock() {
     tft.setTextColor(randomColor, TFT_BLACK);
     tft.setTextSize(3);
     tft.setFreeFont(&FreeSerifBold12pt7b);
-    tft.drawString(seconds, 380, 280);
+    tft.drawString(seconds, 365, 250);
 
     // Resetar o contador ao atingir 30
     updateCounter = 30;
@@ -104,7 +104,7 @@ void scrollText() {
 
   tft.setTextColor(TFT_GREEN, TFT_BLACK);  // Cor do texto
   tft.setFreeFont(&FreeSerifBold24pt7b);  // Fonte
-  tft.setTextSize(5);  // Tamanho do texto
+  tft.setTextSize(3);  // Tamanho do texto
 
   
   tft.fillRect(0, tft.height() - 480, tft.width(), 480, TFT_BLACK);  // Limpa a área onde o texto será desenhado

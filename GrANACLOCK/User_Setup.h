@@ -2,8 +2,8 @@
 
 #define ILI9486_DRIVER
 
-#define TFT_WIDTH  320 
-#define TFT_HEIGHT 480
+#define TFT_WIDTH  480 
+#define TFT_HEIGHT 320
 
 #define TFT_MISO 13 // 21
 #define TFT_MOSI 11  // 47

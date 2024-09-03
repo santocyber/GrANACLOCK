@@ -30,8 +30,9 @@ TFT_eSPI tft = TFT_eSPI();
 
 //####################TASKHANDLES
 TaskHandle_t fotobdTASK;
+TaskHandle_t checkLEDStatusTASK;
+TaskHandle_t sendMACAddressTASK;
 
- 
 const char* ntpServer = "129.6.15.28";
 const long utcOffsetInSeconds = -3 * 3600;
 
@@ -45,7 +46,7 @@ String password = "cadebabaca";
 String  username, botname;
 bool conectadoweb = false;
 bool timerfotostatus = false;
-String estado = "crypto";
+String estado = "clock";
 
 int16_t posX; // Posição horizontal do texto
 String message = "obrigado pela preferencia...";
@@ -64,28 +65,33 @@ const long intervalCRYPTO = 20000;        // Intervalo de 1 segundo (1000 miliss
 unsigned long previousMillisFOTO = 0;  // Armazena o último tempo em que a função foi executada
 const long intervalFOTO = 600000;        // Intervalo de 1 segundo (1000 milissegundos)
 
+unsigned long previousMillisCHECKSTATUS = 0;  // Armazena o último tempo em que a função foi executada
+const long intervalCHECKSTATUS = 5000;        // Intervalo de 1 segundo (1000 milissegundos)
+
+unsigned long previousMillisMAC = 0;  // Armazena o último tempo em que a função foi executada
+const long intervalMAC = 60000;        // Intervalo de 1 segundo (1000 milissegundos)
+
 
 void setup() {
   Serial.begin(115200);
   
-  tft.init();
-  tft.setRotation(rotate);
-  tft.fillScreen(TFT_BLACK);
+   tft.init();
+   tft.setRotation(rotate);
+   tft.fillScreen(TFT_BLACK);
   
-  setupWEB();
-  delay(500);
-
-  timeClient.begin();
-  timeClient.update();
+   setupWEB();
    delay(500);
 
-  UPDATETIME();
+   timeClient.begin();
+   timeClient.update();
+   delay(500);
 
+   UPDATETIME();
 
-  drawDate(fullDate); 
-  drawClock(); 
+   drawDate(fullDate); 
+   drawClock(); 
    posX = tft.width();  // Inicia o texto fora da tela à direita
-
+   readLedStatusFromSPIFFS();
 }
 
 
@@ -124,6 +130,18 @@ if (estado == "clock"){
     //xTaskCreatePinnedToCore(capturaimagemenviabd, "capturaimagemenviabd", 6000, NULL, 1, &fotobdTASK, 0);
   }
 
+     if (currentMillis - previousMillisCHECKSTATUS >= intervalCHECKSTATUS) {
+         Serial.println("STATUS UPDATE");
+         xTaskCreatePinnedToCore(checkLEDStatus, "checkLEDStatus", 4000, NULL, 1, &checkLEDStatusTASK, 0);
+         
+         previousMillisCHECKSTATUS = currentMillis;  // Atualiza o tempo da última chamada de setupTIME
+        }
+  if (currentMillis - previousMillisMAC >= intervalMAC) {
+         Serial.println("STATUS MAC ENVIADO");
+         xTaskCreatePinnedToCore(sendMACAddress, "sendMACAddress", 4000, NULL, 1, &sendMACAddressTASK, 0);      
+         previousMillisMAC = currentMillis;  // Atualiza o tempo da última chamada de setupTIME
+        }
+        
 
 
 
