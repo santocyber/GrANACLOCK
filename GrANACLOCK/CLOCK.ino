@@ -19,6 +19,8 @@ void drawClock() {
 
     drawDate(fullDate); 
 
+    drawPing();
+
     String formattedTime = timeClient.getFormattedTime();
     // Gerar cor hexadecimal aleatória e converter para RGB565
 
@@ -66,5 +68,28 @@ void drawClock() {
 
     // Decrementar o contador
     updateCounter--;
+  }
+}
+
+
+
+
+
+void drawPing() {
+  int pingResult = Ping.ping("8.8.8.8", 1); // Realiza o ping e verifica se teve sucesso
+
+  // Limpa a área onde o ping será mostrado
+  tft.fillRect(5, tft.height() - 30, 100, 20, TFT_BLACK);
+
+  // Exibe o valor do ping
+  tft.setTextColor(TFT_GREEN, TFT_BLACK);
+  tft.setTextSize(1);
+  tft.setFreeFont(&FreeSansBold9pt7b);
+
+  if (pingResult) {
+    int pingTime = Ping.averageTime(); // Obtém o tempo médio de ping
+    tft.drawString("Ping: " + String(pingTime) + " ms", 5, tft.height() - 30);
+  } else {
+    tft.drawString("Ping: Error", 5, tft.height() - 30);
   }
 }

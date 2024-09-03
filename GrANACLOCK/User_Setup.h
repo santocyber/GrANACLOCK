@@ -5,10 +5,10 @@
 #define TFT_WIDTH  320 
 #define TFT_HEIGHT 480
 
-#define TFT_MISO 13
-#define TFT_MOSI 11
-#define TFT_SCLK 12
-#define TFT_CS   10
+#define TFT_MISO 13 // 21
+#define TFT_MOSI 11  // 47
+#define TFT_SCLK 12  // 39
+#define TFT_CS   10 //14
 #define TFT_DC   46
 #define TFT_RST   9
 #define TOUCH_CS 3
