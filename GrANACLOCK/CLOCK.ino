@@ -93,3 +93,29 @@ void drawPing() {
     tft.drawString("Ping: Error", 5, tft.height() - 30);
   }
 }
+
+
+
+
+void scrollText() {
+
+  tft.setRotation(rotate);  // Ajuste a rotação se necessário
+  //tft.fillScreen(TFT_BLACK);
+
+  tft.setTextColor(TFT_GREEN, TFT_BLACK);  // Cor do texto
+  tft.setFreeFont(&FreeSerifBold24pt7b);  // Fonte
+  tft.setTextSize(5);  // Tamanho do texto
+
+  
+  tft.fillRect(0, tft.height() - 480, tft.width(), 480, TFT_BLACK);  // Limpa a área onde o texto será desenhado
+  tft.setCursor(posX, tft.height() - 70);  // Define a posição do cursor
+  tft.print(message);  // Desenha a mensagem
+
+  posX -= 25;  // Move o texto para a esquerda
+
+  // Se o texto tiver saído da tela à esquerda, reinicia a posição à direita
+  if (posX < -tft.textWidth(message)) {
+    posX = tft.width();
+  }
+
+}

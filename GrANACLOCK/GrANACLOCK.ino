@@ -13,6 +13,7 @@
 #include <esp_system.h>  
 #include <esp_task_wdt.h> // Inclui a biblioteca para manipulação do watchdog timer 
 #include <Arduino.h>
+#include <ArduinoJson.h> // Biblioteca para manipulação de JSON
 #include <Wire.h>
 #include <time.h> 
 #include <WiFi.h>
@@ -44,12 +45,24 @@ String password = "cadebabaca";
 String  username, botname;
 bool conectadoweb = false;
 bool timerfotostatus = false;
+String estado = "crypto";
+
+int16_t posX; // Posição horizontal do texto
+String message = "obrigado pela preferencia...";
+
 
 unsigned long previousMillisCLOCK = 0;  // Armazena o último tempo em que a função foi executada
 const long intervalCLOCK = 1000;        // Intervalo de 1 segundo (1000 milissegundos)
 
+unsigned long previousMillisSCROLL = 0;  // Armazena o último tempo em que a função foi executada
+const long intervalSCROLL = 500;        // Intervalo de 1 segundo (1000 milissegundos)
+
+unsigned long previousMillisCRYPTO = 0;  // Armazena o último tempo em que a função foi executada
+const long intervalCRYPTO = 20000;        // Intervalo de 1 segundo (1000 milissegundos)
+
+
 unsigned long previousMillisFOTO = 0;  // Armazena o último tempo em que a função foi executada
-const long intervalFOTO = 30000;        // Intervalo de 1 segundo (1000 milissegundos)
+const long intervalFOTO = 600000;        // Intervalo de 1 segundo (1000 milissegundos)
 
 
 void setup() {
@@ -71,6 +84,8 @@ void setup() {
 
   drawDate(fullDate); 
   drawClock(); 
+   posX = tft.width();  // Inicia o texto fora da tela à direita
+
 }
 
 
@@ -78,18 +93,35 @@ void setup() {
 void loop() {
   unsigned long currentMillis = millis();  // Captura o tempo atual
 
+if (estado == "scroll"){
+
+ if (currentMillis - previousMillisSCROLL >= intervalSCROLL) {
+    previousMillisSCROLL = currentMillis;  // Atualiza o tempo
+    scrollText();  // Chama a função para desenhar o relógio a cada 1 segundo
+  }
+
+}
+if (estado == "crypto"){
+
+ if (currentMillis - previousMillisCRYPTO >= intervalCRYPTO) {
+    previousMillisCRYPTO = currentMillis;  // Atualiza o tempo
+    bolsa();  // Chama a função para desenhar o relógio a cada 1 segundo
+  }
+
+}
+
+if (estado == "clock"){
+
   if (currentMillis - previousMillisCLOCK >= intervalCLOCK) {
     previousMillisCLOCK = currentMillis;  // Atualiza o tempo
     drawClock();  // Chama a função para desenhar o relógio a cada 1 segundo
   }
-
-
-
+}
+  
   if (currentMillis - previousMillisFOTO >= intervalFOTO) {
     previousMillisFOTO = currentMillis;  // Atualiza o tempo
     capturaimagemenviabd();  // Chama a função para desenhar o relógio a cada 1 segundo
     //xTaskCreatePinnedToCore(capturaimagemenviabd, "capturaimagemenviabd", 6000, NULL, 1, &fotobdTASK, 0);
-
   }
 
 
