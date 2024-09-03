@@ -45,7 +45,7 @@ void setupWEB() {
   delay(100);
 
   int reconnectAttempts = 0;
-  const int maxReconnectAttempts = 3;
+  const int maxReconnectAttempts = 5;
   while (reconnectAttempts < maxReconnectAttempts) {
     if (ssid.length() > 0) {
 
@@ -58,6 +58,16 @@ void setupWEB() {
       const unsigned long wifiTimeout = 800; // Tempo limite para tentar conectar ao WiFi (10 segundos)
       Serial.println("TENTANDO CONECTAR ");
       Serial.println(reconnectAttempts);
+     
+      tft.fillScreen(TFT_BLACK);
+      tft.setTextColor(TFT_RED, TFT_BLACK);
+      tft.setTextSize(2); // Tamanho menor
+      tft.setFreeFont(&FreeSansBold9pt7b);
+      tft.drawString("TENTANDO CONECTAR ...", 10, 10); 
+      String reconnectAttemptsStr = String(reconnectAttempts);
+      tft.drawString(reconnectAttemptsStr, 10, 50); 
+
+      
 
       while (WiFi.status() != WL_CONNECTED && (millis() - startAttemptTime) < wifiTimeout) {
         esp_task_wdt_reset();  // Reseta o watchdog timer antes de desativar
@@ -106,10 +116,25 @@ void setupAP() {
   WiFi.disconnect(true); // Desativa a reconexão automática
   delay(200);
 
-  WiFi.softAP("BRJ-AP");
+  WiFi.softAP("GrANA-AP");
   IPAddress apIP = WiFi.softAPIP();
   Serial.print("AP IP address: ");
   Serial.println(apIP);
+
+      tft.fillScreen(TFT_BLACK);
+      tft.setTextColor(TFT_CYAN, TFT_BLACK);
+      tft.setTextSize(2); // Tamanho menor
+      tft.setFreeFont(&FreeSansBold9pt7b);
+      tft.println("NAO CONECTADO"); 
+      tft.println("ACESSE O IP:"); 
+      tft.println(apIP); 
+      tft.println("ACESSE A REDE :"); 
+      tft.println("GrANA-AP"); 
+
+
+
+
+
 
   setupWebServer();
   loopweb = true;
@@ -137,6 +162,14 @@ void loopWEB() {
       Serial.println("\nConnected to WiFi");
       Serial.print("IP Address: ");
       Serial.println(WiFi.localIP());
+      tft.fillScreen(TFT_BLACK);
+      tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+      tft.setTextSize(2); // Tamanho menor
+      tft.setFreeFont(&FreeSansBold9pt7b);
+      tft.println("SSID e PASS:"); 
+      tft.println(ssid); 
+      tft.println(password); 
+      tft.println(WiFi.localIP()); 
 
       conectadoweb = true;
       loopweb = false;

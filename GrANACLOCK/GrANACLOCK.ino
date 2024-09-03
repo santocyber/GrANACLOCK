@@ -27,8 +27,6 @@ TFT_eSPI tft = TFT_eSPI();
 
 
  
-String ssid = "InternetSAX";
-String password = "cadebabaca";
 const char* ntpServer = "129.6.15.28";
 const long utcOffsetInSeconds = -3 * 3600;
 
@@ -37,10 +35,13 @@ NTPClient timeClient(ntpUDP, ntpServer, utcOffsetInSeconds);
 
 int rotate = 3;
 String fullDate;
+String ssid = "InternetSAX";
+String password = "cadebabaca";
 String  username, botname;
 bool conectadoweb = false;
 
-unsigned long currentMillis = millis();
+unsigned long previousMillisCLOCK = 0;  // Armazena o último tempo em que a função foi executada
+const long intervalCLOCK = 1000;        // Intervalo de 1 segundo (1000 milissegundos)
 
 
 void setup() {
@@ -50,19 +51,16 @@ void setup() {
   tft.setRotation(rotate);
   tft.fillScreen(TFT_BLACK);
   
-  WiFi.begin(ssid.c_str(), password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("\nConectado ao WiFi");
+  setupWEB();
+  delay(500);
 
   timeClient.begin();
   timeClient.update();
-    delay(500);
+   delay(500);
 
   UPDATETIME();
-      delay(500);
+
+
 
   drawDate(fullDate); 
   drawClock(); 
@@ -70,12 +68,12 @@ void setup() {
 
 
 
-
 void loop() {
+  unsigned long currentMillis = millis();  // Captura o tempo atual
 
- // UPDATETIME();
+  if (currentMillis - previousMillisCLOCK >= intervalCLOCK) {
+    previousMillisCLOCK = currentMillis;  // Atualiza o tempo
+    drawClock();  // Chama a função para desenhar o relógio a cada 1 segundo
+  }
 
-  drawClock();
-
-  delay(1000); 
 }

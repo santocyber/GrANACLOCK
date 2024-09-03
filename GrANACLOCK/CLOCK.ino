@@ -1,8 +1,8 @@
 
 void drawDate(String fullDate) {
-  tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+  tft.setTextColor(TFT_CYAN, TFT_BLACK);
   tft.setTextSize(1); // Tamanho menor
-  tft.setFreeFont(&FreeSans9pt7b);
+  tft.setFreeFont(&FreeSansBold9pt7b);
   tft.drawString(fullDate, 5, 5); 
 }
 
@@ -13,20 +13,21 @@ void drawClock() {
       uint16_t randomColor = tft.color565(random(256), random(256), random(256));
 
   if (updateCounter == 0) { // Atualizar a hora e os minutos apenas quando o contador for 0
+     tft.fillScreen(TFT_BLACK);
+    
+    UPDATETIME();
 
     drawDate(fullDate); 
 
-    timeClient.update(); 
     String formattedTime = timeClient.getFormattedTime();
     // Gerar cor hexadecimal aleatória e converter para RGB565
-    uint16_t randomColor = tft.color565(random(256), random(256), random(256));
 
     // Separar a hora e os segundos
     String hoursMinutes = formattedTime.substring(0, 5); // "HH:MM"
     String seconds = formattedTime.substring(6); // "SS"
 
     // Limpar a área da hora e dos minutos
-    tft.fillRect(15, 75, 240, 40, TFT_BLACK); // Ajuste a largura e altura conforme necessário
+    tft.fillRect(15, 75, 290, 60, TFT_BLACK); // Ajuste a largura e altura conforme necessário
 
     // Desenhar a hora e os minutos
     tft.setTextColor(randomColor, TFT_BLACK);
